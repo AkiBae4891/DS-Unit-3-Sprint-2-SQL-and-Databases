@@ -21,8 +21,12 @@ fetch = engine.execute("SELECT * FROM buddymove_holidayiq").fetchall()
 print(fetch)
 
 query = """SELECT COUNT(*)
-FROM buddymove_holidayiq"""
+FROM budymove_holidayiq"""
 curs.execute(query)
 count = curs.fetchall()
-print("The number of rows in db:", count)
+print("The number of rows in db: ", count)
 
+query = """SELECT COUNT(User Id) ....."""
+curs.execute(query)
+reviews = curs.fetchall()
+print("How many reviewed at least 100: ", reviews)
