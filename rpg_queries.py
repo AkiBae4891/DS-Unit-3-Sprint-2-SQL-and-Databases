@@ -1,3 +1,5 @@
+import pandas as pd
+from sqlalchemy import create_engine
 import sqlite3
 conn = sqlite3.connect('rpg_db.sqlite3')
 curs = conn.cursor()
@@ -86,20 +88,20 @@ How many weapons does each character have? (Return first 20 rows)
 '''
 
 # *****************************************************************
-query = """SELECT COUNT(item_id)
-FROM charactercreator_character 
-INNER JOIN armory_item 
-ON character_id = item_id LIMIT 20;"""
-curs.execute(query)
-curs.fetchall()
+# query = """SELECT COUNT(item_id)
+# FROM charactercreator_character
+# INNER JOIN armory_item
+# ON character_id = item_id LIMIT 20;"""
+# curs.execute(query)
+# curs.fetchall()
 
 # ******************************************************************
-query = """SELECT COUNT(item_id)
-FROM charactercreator_character 
-INNER JOIN armory_weapon 
-ON character_id = item_id LIMIT 20;"""
-curs.execute(query)
-curs.fetchall()
+# query = """SELECT COUNT(item_id)
+# FROM charactercreator_character
+# INNER JOIN armory_weapon
+# ON character_id = item_id LIMIT 20;"""
+# curs.execute(query)
+# curs.fetchall()
 
 '''
 On average, how many Items does each Character have?
@@ -116,19 +118,3 @@ FROM armory_weapon"""
 curs.execute(query)
 curs.fetchall()
 
-# Buddymove Dataset; Assignment 2
-
-import pandas as pd
-from sqlalchemy import create_engine
-
-df = pd.read_csv('buddymove_holidayiq.csv')
-df.shape
-
-# make buddymove_holidayiq.sqlite3 db
-df.head()
-
-# Create in memory SQLite db
-engine = create_engine('sqlite://', echo=False)
-
-df.to_sql('buddymove_holidayiq', con=engine)
-engine.execute("SELECT * FROM buddymove_holidayiq").fetchall()
