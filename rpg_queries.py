@@ -29,35 +29,40 @@ curs.fetchall()
 How many of each specific Subclass
 '''
 
-#Cleric
+# Cleric
 query = """SELECT COUNT(character_ptr_id) 
 FROM charactercreator_cleric;"""
-curs.execute(query)
+cleric = curs.execute(query)
 curs.fetchall()
+print("The amount of Clerics: ", cleric)
 
-#Fighter
+# Fighter
 query = """SELECT COUNT(character_ptr_id) 
 FROM charactercreator_fighter;"""
-curs.execute(query)
+fighter = curs.execute(query)
 curs.fetchall()
+print("The amount of fighters: ", fighter)
 
-#Mage
+# Mage
 query = """SELECT COUNT(character_ptr_id) 
 FROM charactercreator_mage;"""
-curs.execute(query)
+mage = curs.execute(query)
 curs.fetchall()
+print("The amount of mages: ", mage)
 
-#Necromancer
+# Necromancer
 query = """SELECT COUNT(mage_ptr_id) 
 FROM charactercreator_necromancer;"""
-curs.execute(query)
+necro = curs.execute(query)
 curs.fetchall()
+print("The amount of necros: ", necro)
 
-#Thief
+# Thief
 query = """SELECT COUNT(character_ptr_id) 
 FROM charactercreator_thief;"""
-curs.execute(query)
+thief = curs.execute(query)
 curs.fetchall()
+print("The amount of thieves: ", thief)
 
 '''
 How many total Items?
@@ -65,56 +70,65 @@ How many total Items?
 
 query = """SELECT COUNT(item_id)
 FROM armory_item"""
-curs.execute(query)
+total_items = curs.execute(query)
 curs.fetchall()
+print("Total items: ", total_items)
 
 '''
 How many of the Items are weapons? How many are not?
 '''
 
+# add up all items, add up weapons, then subtract weapons. Easy solution
 query1 = """SELECT COUNT(item_id)
 FROM armory_item"""
-curs.execute(query1)
+q1 = curs.execute(query1)
 curs.fetchall()
+print("Items: ", q1)
 
 query2 = """SELECT COUNT(item_ptr_id)
 FROM armory_weapon"""
-curs.execute(query2)
+q2 = curs.execute(query2)
 curs.fetchall()
+print("Weapons: ", q2)
 
 '''
 How many Items does each character have? (Return first 20 rows)
 How many weapons does each character have? (Return first 20 rows)
 '''
 
-# *****************************************************************
-# query = """SELECT COUNT(item_id)
-# FROM charactercreator_character
-# INNER JOIN armory_item
-# ON character_id = item_id LIMIT 20;"""
-# curs.execute(query)
-# curs.fetchall()
+query = """SELECT character_id, COUNT(item_id)
+FROM charactercreator_character_inventory
+GROUP BY character_id LIMIT 20;"""
+char_item = curs.execute(query)
+curs.fetchall()
+print("Items each Character has: ", char_item)
 
-# ******************************************************************
-# query = """SELECT COUNT(item_id)
-# FROM charactercreator_character
-# INNER JOIN armory_weapon
-# ON character_id = item_id LIMIT 20;"""
-# curs.execute(query)
-# curs.fetchall()
+query = """SELECT character_id, COUNT(item_id)
+FROM charactercreator_character_inventory
+WHERE item_id > 138
+GROUP BY character_id;"""
+char_weap = curs.execute(query)
+curs.fetchall()
+print("Weapons each Character has: ", char_weap)
 
 '''
 On average, how many Items does each Character have?
 On average, how many weapons does each Character have?
+Answer is: 898 / 302 = 2.97
 '''
 
-query = """SELECT AVG(item_id)
-FROM armory_item"""
-curs.execute(query)
-curs.fetchall()
+# using division
 
-query = """SELECT AVG(item_ptr_id)
-FROM armory_weapon"""
-curs.execute(query)
+query = """SELECT COUNT(item_id) / COUNT(DISTINCT character_id)
+FROM charactercreator_character_inventory;"""
+avg_items = curs.execute(query)
 curs.fetchall()
+print("Average items each character has: ", avg_items)
 
+# using division
+query = """SELECT COUNT(item_id) / COUNT(DISTINCT character_id)
+FROM charactercreator_character_inventory
+WHERE item_id > 138"""
+avg_weap = curs.execute(query)
+curs.fetchall()
+print("Average weapons each character has: ", avg_weap)
