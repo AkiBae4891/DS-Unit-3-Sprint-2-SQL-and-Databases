@@ -29,42 +29,55 @@ top_ten = curs.fetchall()
 print("Top ten expensive items: ", top_ten)
 
 # Average age of Employees at time of hiring
-query = """SELECT HireDate, AVG(BirthDate)
-FROM Employee
-GROUP BY HireDate
-UNION
-SELECT HireDate, AVG(BirthDate) FROM Employee"""
+query = """SELECT AVG(HireDate - BirthDate)
+FROM Employee """
 curs.execute(query)
 avg_age = curs.fetchall()
 print("Avg age of employees at hiring :", avg_age)
 
 # STRETCH GOAL: Looks like cites in Washington State hires older people
-query = """SELECT HireDate, AVG(BirthDate), City
-FROM Employee
-GROUP BY City
-UNION
-SELECT HireDate, AVG(BirthDate), City FROM Employee"""
+query = """SELECT AVG(HireDate - BirthDate), City
+FROM Employee 
+GROUP BY City"""
 curs.execute(query)
 stretch = curs.fetchall()
 print("Age hired difference by city: ", stretch)
 
 # What are the ten most expensive items (per unit price) in the database AND their Supplier?
-# Join Product and Supplier on UnitPrice = Company name
+# Join Product and Supplier on Id and Id
 query = """SELECT ProductName, UnitPrice, CompanyName
 FROM Product
-INNER JOIN Supplier 
-ON UnitPrice = CompanyName
+JOIN Supplier
+ON Product.Id = Supplier.Id
 ORDER BY UnitPrice DESC
 LIMIT 10;"""
 curs.execute(query)
 top_ten_sup = curs.fetchall()
 print("Top ten expensive items and suppliers: ", top_ten_sup)
 
-# Who is the employee with the most territory
+# What is the largest category (by number of unique products in it)
+# Confections is the largest with 13 products 
+query = """SELECT CategoryName, COUNT(Product.Id)
+FROM Category
+INNER JOIN Product
+ON Product.CategoryId = Category.Id
+GROUP BY CategoryName
+ORDER BY COUNT(Product.Id) DESC 
+LIMIT  3;"""
+curs.execute(query)
+cat = curs.fetchall()
+print("Largest category is: ", cat)
 
-query = """SELECT FirstName, COUNT(TerritoryId) 
-FROM Employee
-INNER JOIN EmployeeTerritory 
-ON FirstName = TerritoryId"""
+# Who is the employee with the most territory
+# Robert has 10 territories
+
+query = """SELECT Employee.FirstName, COUNT(TerritoryId)
+FROM EmployeeTerritory
+INNER JOIN Employee
+ON EmployeeTerritory.EmployeeId = Employee.Id
+GROUP BY Employee.Id
+ORDER BY COUNT(TerritoryId) DESC 
+LIMIT  3;"""
 curs.execute(query)
 T = curs.fetchall()
+print("The employee with the most territories is: ", T)
