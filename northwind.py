@@ -41,10 +41,10 @@ FROM Employee
 GROUP BY City"""
 curs.execute(query)
 stretch = curs.fetchall()
-print("Age hired difference by city: ", stretch)
+print("Ages hired vary by city: ", stretch)
 
 # What are the ten most expensive items (per unit price) in the database AND their Supplier?
-# Join Product and Supplier on Id and Id
+# Join Product and Supplier on Id and Id. (Note: I asked TL why Cote de Blaye not in this list, but in previous) Unsure. 
 query = """SELECT ProductName, UnitPrice, CompanyName
 FROM Product
 JOIN Supplier
